@@ -1,27 +1,29 @@
-public class Stack<T> {
+public class Stack {
     //BT
-    record bTree(T left, T right, bTree tree);
+    record bTree<T>(T val, bTree left, bTree right){};
 
     //need equals method?
     boolean equals(bTree other){
         if(other instanceof bTree){
             switch(other){
                 case null: return this == null;
-                case bTree(T l, T r, T t):
-                    return this.left==l && this.right==r && check(this.tree, t);
+                case bTree(T val, bTree l, bTree r):
+                    return this.val==val && check(this.left, l) && check(this.right, r);
             }
         }
+        return false;
     }
 
+    //fix this
     boolean check(bTree one, bTree two){
         switch(one){
-            case null: return two== null;
-            case bTree(T l, T r, bTree r):
-                if(two == null) {
+            case null: return two == null;
+            case bTree(T val, bTree l, bTree r):
+                if(two.val == null) {
                     return false;
                 }
-                else if(l==two.left && r==two.right){
-                    return check(r, two.tree);
+                else if(val == two.val){
+                    return check(l, two.left) && check(r, two.right) ;
                 }
                 return false;
         }
@@ -30,8 +32,8 @@ public class Stack<T> {
     public static int countNodes(bTree l){
         switch(l){
             case null: return 0;
-            case bTree(T l, T r, bTree t):
-                return 2 + countNodes(t);
+            case bTree(T val, bTree l, bTree r):
+                return 1 + countNodes(l) + countNodes(r);
         }
     }
 
@@ -39,17 +41,21 @@ public class Stack<T> {
     public static bTree mirror(bTree l){
         switch(l){
             case null: return new bTree(null, null, null);
-            case bTree(T l, T r, bTree t):
-                return new bTree(r, l, t);
+            case bTree(T val, bTree l, bTree r):
+                return new bTree(val, r, l);
         }
     }
 
     public static <T>List preorder(bTree l){
         switch(l){
             case null: return new <T>List(null, null);
-            case bTree(T l, T r, T t):
-                //insert into the list,
-                //do retirn new List(insert(l,r), t)???
+            case bTree(T val, bTree l, bTree r):
+                List linkedl;
+                //add vals to linked1
+                linkedl.add(val);
+                linkedl.add(l);
+                linkedl.add(r);
+                return linkedl;
         }
     }
 
@@ -62,15 +68,10 @@ public class Stack<T> {
 
 
 
-    
+
 
     //generic linkedlist
     record List(T first, List rest) { }
-    List elts;
-
-    Stack(List elts) {
-        this.elts = elts;
-    }
 
 
 
